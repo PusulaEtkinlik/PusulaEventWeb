@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "./static/css/main.d4cebc54.css",
+    "main.js": "./static/js/main.6aefc3ef.js",
+    "static/media/pusula.PNG": "./static/media/pusula.bd2ad611ef552f24efec.PNG",
+    "index.html": "./index.html",
+    "main.d4cebc54.css.map": "./static/css/main.d4cebc54.css.map",
+    "main.6aefc3ef.js.map": "./static/js/main.6aefc3ef.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d4cebc54.css",
+    "static/js/main.6aefc3ef.js"
+  ]
+}
