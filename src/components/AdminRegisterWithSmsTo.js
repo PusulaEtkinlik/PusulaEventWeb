@@ -13,7 +13,7 @@ export default function AdminRegisterWithSmsTo() {
   const [approverPhone, setApproverPhone] = useState("");
   const [code, setCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(150);
   const navigate = useNavigate();
   const [verificationCode, setVerificationCode] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
@@ -50,7 +50,7 @@ export default function AdminRegisterWithSmsTo() {
       const data = await response.json();
       if (data.success) {
         setCodeSent(true);
-        setTimeLeft(60);
+        setTimeLeft(150);
         alert("Kod başarıyla gönderildi!");
       } else {
         alert("SMS gönderilemedi: " + data.error);
@@ -71,7 +71,7 @@ export default function AdminRegisterWithSmsTo() {
       alert("Kod süresi doldu. Lütfen tekrar deneyin.");
       setCodeSent(false);
       setCode("");
-      setTimeLeft(60);
+      setTimeLeft(150);
     }
   }, [codeSent, timeLeft]);
 
