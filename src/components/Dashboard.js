@@ -1,26 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/pusula.PNG";
-import { getAuth, signOut } from "firebase/auth";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const auth = getAuth();
 
-  signOut(auth).then(() => {
-    localStorage.clear(); // güvenli tarafta kalmak için
-    sessionStorage.clear();
-    window.location.href = "/"; // veya navigate("/")
-  });
-
-  const handleLogout = async () => {
+  const handleLogout = () => {
     if (window.confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
-      try {
-        await signOut(auth);
-        navigate("/");
-      } catch (error) {
-        console.error("Çıkış hatası:", error);
-      }
+      navigate("/");
     }
   };
 
