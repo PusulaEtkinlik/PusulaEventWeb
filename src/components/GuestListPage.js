@@ -23,7 +23,8 @@ export default function GuestListPage() {
   const [editForm, setEditForm] = useState({ name: "", surname: "", phone: "", school: "", reference: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
-
+  const maxVisiblePages = 5;
+  
   useEffect(() => {
     const fetchGuests = async () => {
       try {
@@ -176,12 +177,42 @@ export default function GuestListPage() {
         )}
 
         {totalPages > 1 && (
-          <div className="flex flex-wrap justify-center gap-2 pt-4">
-            <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">⬅️</button>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 rounded ${currentPage === i + 1 ? "bg-amber-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}>{i + 1}</button>
-            ))}
-            <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">➡️</button>
+          <div className="flex justify-center gap-2 pt-4 flex-wrap">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            >
+              ⬅️
+            </button>
+
+            {Array.from({ length: Math.min(maxVisiblePages, totalPages) }, (_, i) => {
+              const middle = Math.floor(maxVisiblePages / 2);
+              let start = Math.max(1, currentPage - middle);
+              let end = Math.min(totalPages, start + maxVisiblePages - 1);
+              if (end - start < maxVisiblePages - 1) {
+                start = Math.max(1, end - maxVisiblePages + 1);
+              }
+
+              return Array.from({ length: end - start + 1 }, (_, j) => start + j).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`px-3 py-1 rounded ${currentPage === pageNum ? "bg-amber-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                    }`}
+                >
+                  {pageNum}
+                </button>
+              ));
+            })}
+
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            >
+              ➡️
+            </button>
           </div>
         )}
 
