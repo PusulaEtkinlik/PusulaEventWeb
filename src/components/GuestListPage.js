@@ -176,7 +176,7 @@ export default function GuestListPage() {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 pt-4">
+          <div className="flex flex-wrap justify-center gap-2 pt-4">
             <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">⬅️</button>
             {Array.from({ length: totalPages }, (_, i) => (
               <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 rounded ${currentPage === i + 1 ? "bg-amber-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}>{i + 1}</button>
