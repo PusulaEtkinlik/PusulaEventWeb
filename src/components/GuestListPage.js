@@ -24,7 +24,7 @@ export default function GuestListPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   const maxVisiblePages = 5;
-  
+
   useEffect(() => {
     const fetchGuests = async () => {
       try {
@@ -186,15 +186,14 @@ export default function GuestListPage() {
               ⬅️
             </button>
 
-            {Array.from({ length: Math.min(maxVisiblePages, totalPages) }, (_, i) => {
-              const middle = Math.floor(maxVisiblePages / 2);
-              let start = Math.max(1, currentPage - middle);
-              let end = Math.min(totalPages, start + maxVisiblePages - 1);
-              if (end - start < maxVisiblePages - 1) {
-                start = Math.max(1, end - maxVisiblePages + 1);
-              }
-
-              return Array.from({ length: end - start + 1 }, (_, j) => start + j).map((pageNum) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((page) => {
+                if (totalPages <= 5) return true;
+                if (currentPage <= 3) return page <= 5;
+                if (currentPage >= totalPages - 2) return page >= totalPages - 4;
+                return Math.abs(page - currentPage) <= 2;
+              })
+              .map((pageNum) => (
                 <button
                   key={pageNum}
                   onClick={() => setCurrentPage(pageNum)}
@@ -203,8 +202,7 @@ export default function GuestListPage() {
                 >
                   {pageNum}
                 </button>
-              ));
-            })}
+              ))}
 
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
