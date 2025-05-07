@@ -22,6 +22,7 @@ export default function GuestListPage() {
   const [editingGuestId, setEditingGuestId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", surname: "", phone: "", school: "", reference: "" });
   const [currentPage, setCurrentPage] = useState(1);
+  const [sendingAll, setSendingAll] = useState(false);
   const rowsPerPage = 10;
   const maxVisiblePages = 5;
 
@@ -96,9 +97,16 @@ export default function GuestListPage() {
 
   const handleSendAllInvites = async () => {
     if (!window.confirm("Tüm davetlilere SMS göndermek istediğinizden emin misiniz?")) return;
+    setSendingAll(true);
     for (const guest of filteredGuests) {
-      await handleSendInvite(guest);
+      try {
+        await sendSmsInvite(guest);
+      } catch (error) {
+        console.error("SMS gönderim hatası:", error);
+      }
     }
+    setSendingAll(false);
+    alert("Tüm davetlilere davetiye gönderildi.");
   };
 
   const handleEdit = (guest) => {
@@ -147,7 +155,13 @@ export default function GuestListPage() {
           }}
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
         />
-        <button onClick={handleSendAllInvites} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">📨 Tümüne Davetiye Gönder</button>
+        <button
+          onClick={handleSendAllInvites}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl"
+          disabled={sendingAll}
+        >
+          {sendingAll ? "Gönderiliyor..." : "📨 Tümüne Davetiye Gönder"}
+        </button>
       </div>
 
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow space-y-6">
