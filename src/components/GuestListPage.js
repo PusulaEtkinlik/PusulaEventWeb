@@ -151,11 +151,86 @@ export default function GuestListPage() {
       </div>
 
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow space-y-6">
-        {/* Davetli Kartları */}
-        {/* Sayfalama */}
-        {/* Geri Dön */}
-        {/* Kod burada devam ediyor... */}
+      {paginatedGuests.length === 0 ? (
+        <p className="text-center text-gray-600">Aradığınız kriterlere uygun davetli bulunamadı.</p>
+      ) : (
+        paginatedGuests.map((guest) => (
+          <div key={guest.id} className="border-b pb-4 text-gray-700">
+            {editingGuestId === guest.id ? (
+              <form onSubmit={handleEditSubmit} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <input name="name" value={editForm.name} onChange={handleEditChange} placeholder="Ad" className="p-2 border border-gray-300 rounded" required />
+                  <input name="surname" value={editForm.surname} onChange={handleEditChange} placeholder="Soyad" className="p-2 border border-gray-300 rounded" required />
+                  <input name="phone" value={editForm.phone} onChange={handleEditChange} placeholder="Telefon" className="p-2 border border-gray-300 rounded col-span-2" required />
+                  <input name="school" value={editForm.school} onChange={handleEditChange} placeholder="Okul" className="p-2 border border-gray-300 rounded col-span-2" required />
+                  <input name="reference" value={editForm.reference} onChange={handleEditChange} placeholder="Referans (opsiyonel)" className="p-2 border border-gray-300 rounded col-span-2" />
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button type="submit" className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600">💾 Kaydet</button>
+                  <button type="button" onClick={() => setEditingGuestId(null)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">❌ Vazgeç</button>
+                </div>
+              </form>
+            ) : (
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <p className="font-semibold">{guest.name} {guest.surname}</p>
+                  <p className="text-sm">🎓 {guest.school}</p>
+                  {guest.reference && <p className="text-sm">📌 Referans: {guest.reference}</p>}
+                  <p className="text-sm text-gray-500">📱 {guest.phone}</p>
+                </div>
+                <div className="flex flex-col gap-2 min-w-[120px] items-end">
+                  <button onClick={() => handleEdit(guest)} className="bg-amber-500 hover:bg-amber-600 text-white text-sm px-3 py-1 rounded w-full">✏️ Düzenle</button>
+                  <button onClick={() => handleDelete(guest.id)} className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded w-full">❌ Sil</button>
+                  <button onClick={() => handleSendInvite(guest)} className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded w-full">📨 Davetiye</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-2 pt-4 flex-wrap">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            ⬅️
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((page) => {
+              if (totalPages <= 5) return true;
+              if (currentPage <= 3) return page <= 5;
+              if (currentPage >= totalPages - 2) return page >= totalPages - 4;
+              return Math.abs(page - currentPage) <= 2;
+            })
+            .map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`px-3 py-1 rounded ${currentPage === pageNum ? "bg-amber-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                  }`}
+              >
+                {pageNum}
+              </button>
+            ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            ➡️
+          </button>
+        </div>
+      )}
+
+      <div className="pt-4">
+        <button onClick={() => navigate("/events")} className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-xl">⬅️ Geri Dön</button>
       </div>
+    </div>
     </div>
   );
 }
